@@ -3,27 +3,29 @@ Maintainer: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
 Section: utils
 Priority: optional
 Build-Depends: debhelper (>= 9),
-               python-all (>= 2.7),
-               python-setuptools,
+               python3-all (>= 3.6),
+               python3-setuptools,
+               python3-defusedxml,
 Standards-Version: 3.8.4
-XS-Python-Version: >= 2.7
+XS-Python-Version: >= 3.6
 
 Package: bmap-tools
 Architecture: all
-Depends: python (>=2.7),
-	 python-gpgme,
+Depends: python3 (>=3.6),
+         python3-gpgme,
          ${misc:Depends},
          ${python:Depends},
-	 bzip2,
-	 pbzip2,
-	 gzip,
-	 pigz,
-	 lzop,
-	 liblz4-tool,
-	 xz-utils,
-	 tar,
-	 unzip,
-	 zstd
+         libgpgme-dev,
+         bzip2,
+         pbzip2,
+         gzip,
+         pigz,
+         lzop,
+         liblz4-tool,
+         xz-utils,
+         tar,
+         unzip,
+         zstd
 Description: Tools to generate block map (AKA bmap) and flash images using
  bmap. Bmaptool is a generic tool for creating the block map (bmap) for a file,
  and copying files using the block map. The idea is that large file containing
