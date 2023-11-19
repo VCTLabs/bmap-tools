@@ -1,4 +1,15 @@
 #!/usr/bin/make -f
 
+#export DH_VERBOSE = 1
+export PYBUILD_NAME = bmaptools
+
+PYTHON3S:=$(shell py3versions -vr)
+
 %:
-	dh $@ --with=python2
+	dh $@ --with python3 --buildsystem=pybuild
+
+override_dh_auto_clean:
+	dh_auto_clean
+	dh_clean .pytest_cache/ tests/__pycache__/ bmaptools/__pycache__/
+
+override_dh_auto_test:

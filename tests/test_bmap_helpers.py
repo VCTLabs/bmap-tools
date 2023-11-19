@@ -20,6 +20,7 @@ This test verifies 'BmapHelpers' module functionality.
 
 import os
 import sys
+import platform
 import tempfile
 from unittest.mock import patch
 from tempfile import TemporaryDirectory
