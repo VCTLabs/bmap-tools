@@ -68,7 +68,8 @@ from typing import List, Optional
 from six import reraise
 from six.moves import queue as Queue
 from six.moves import _thread as thread
-from xml.etree import ElementTree
+from defusedxml import DefusedXmlException
+from defusedxml.ElementTree import parse
 
 from .BmapHelpers import human_size
 
@@ -396,13 +397,13 @@ class BmapCopy(object):
 
     def _parse_bmap(self):
         """
-        Parse the bmap file and initialize corresponding class instance attributs.
+        Parse the bmap file and initialize corresponding class instance attributes.
         """
 
         try:
-            self._xml = ElementTree.parse(self._f_bmap)
-        except ElementTree.ParseError as err:
-            # Extrace the erroneous line with some context
+            self._xml = parse(self._f_bmap)
+        except DefusedXmlException as err:
+            # Extract the erroneous line with some context
             self._f_bmap.seek(0)
             xml_extract = ""
             for num, line in enumerate(self._f_bmap):
