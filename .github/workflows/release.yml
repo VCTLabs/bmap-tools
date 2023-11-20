@@ -52,6 +52,12 @@ jobs:
         python -m pip install --upgrade pip wheel
         pip install tox tox-gh-actions
 
+    - name: Run tests
+      run: |
+        tox -- --slow
+      env:
+        PLATFORM: ${{ matrix.os }}
+
     - name: Build dist pkgs
       run: |
         tox -e build

@@ -10,6 +10,16 @@ PYTHON3S:=$(shell py3versions -vr)
 
 override_dh_auto_clean:
 	dh_auto_clean
-	dh_clean .pytest_cache/ tests/__pycache__/ bmaptools/__pycache__/
+	dh_clean PKG-INFO
+	dh_clean .pytest_cache/ bmaptools.egg-info/
+
+override_dh_auto_configure:
+	dh_auto_configure -- $(CONFIGURE_ARGS)
+	dh_auto_configure --buildsystem=pybuild
 
 override_dh_auto_test:
+ifeq (,$(findstring nocheck, $(DEB_BUILD_OPTIONS)))
+	set -e ; for pyvers in $(PYTHON3S); do \
+		PYTHONPATH="." python$$pyvers -m pytest -k 'not TestCLI' tests ; \
+	done
+endif

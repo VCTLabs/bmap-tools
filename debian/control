@@ -1,35 +1,47 @@
 Source: bmap-tools
-Maintainer: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+Maintainer: Simon McVittie <smcv@debian.org>
+Uploaders: Sjoerd Simons <sjoerd@debian.org>
 Section: utils
 Priority: optional
-Build-Depends: debhelper (>= 9),
-               python3-all (>= 3.6),
-               python3-setuptools,
-               python3-defusedxml,
-               python3-setuptools-scm-git-archive,
-Standards-Version: 3.8.4
-XS-Python-Version: >= 3.6
+Build-Depends:
+ debhelper-compat (= 10),
+ dh-python,
+ python3,
+ python3-gpg,
+ python3-six,
+ python3-setuptools,
+ python3-defusedxml,
+ python3-setuptools-scm,
+ python3-all-dev,
+ python3-pytest,
+Standards-Version: 4.6.2
+Vcs-Git: https://salsa.debian.org/debian/bmap-tools.git
+Vcs-Browser: https://salsa.debian.org/debian/bmap-tools
+Rules-Requires-Root: no
+Homepage: https://github.com/intel/bmap-tools
 
 Package: bmap-tools
 Architecture: all
-Depends: python3 (>=3.6),
-         python3-gpgme,
-         ${misc:Depends},
-         ${python:Depends},
-         libgpgme-dev,
-         bzip2,
-         pbzip2,
-         gzip,
-         pigz,
-         lzop,
-         liblz4-tool,
-         xz-utils,
-         tar,
-         unzip,
-         zstd
-Description: Tools to generate block map (AKA bmap) and flash images using
- bmap. Bmaptool is a generic tool for creating the block map (bmap) for a file,
- and copying files using the block map. The idea is that large file containing
- unused blocks, like raw system image files, can be copied or flashed a lot
- faster with bmaptool than with traditional tools like "dd" or "cp". See
- source.tizen.org/documentation/reference/bmaptool for more information.
+Depends:
+ python3,
+ python3-six,
+ ${misc:Depends},
+ ${python3:Depends},
+Recommends:
+ bzip2,
+ lzop,
+ xz-utils,
+Suggests:
+ lz4,
+ pbzip2,
+ pigz,
+ python3-gpg,
+ unzip,
+Provides:
+ bmaptool (= ${binary:Version}),
+Description: tool to flash image files to block devices using the block map
+ bmaptool is a generic tool for creating the block map (bmap) for a
+ file, and copying files using the block map. The idea is that large
+ file containing unused blocks, like raw system image files, can be
+ copied or flashed a lot faster with bmaptool than with traditional
+ tools like "dd" or "cp".
