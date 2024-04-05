@@ -48,7 +48,7 @@ if sys.version_info < (3, 8):
 else:
     from importlib.metadata import version
 
-VERSION = version('bmaptools')
+VERSION = version('bmaptool')
 
 log = logging.getLogger()  # pylint: disable=C0103
 

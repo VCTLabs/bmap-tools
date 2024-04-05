@@ -27,7 +27,7 @@ from tempfile import TemporaryDirectory
 
 import pytest
 
-from bmaptools import BmapHelpers
+from bmaptool import BmapHelpers
 
 # This is a work-around for Centos 6
 try:

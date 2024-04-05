@@ -1,7 +1,7 @@
 defusedxml
-six
 gpg
 # dev tasks
+six
 pytest
 pytest-cov
 pylint
