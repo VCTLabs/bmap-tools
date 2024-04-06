@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 #export DH_VERBOSE = 1
-export PYBUILD_NAME = bmaptools
+export PYBUILD_NAME = bmaptool
 
 PYTHON3S:=$(shell py3versions -vr)
 
@@ -11,7 +11,7 @@ PYTHON3S:=$(shell py3versions -vr)
 override_dh_auto_clean:
 	dh_auto_clean
 	dh_clean PKG-INFO
-	dh_clean .pytest_cache/ bmaptools.egg-info/
+	dh_clean .pytest_cache/ bmaptool.egg-info/
 
 override_dh_auto_configure:
 	dh_auto_configure -- $(CONFIGURE_ARGS)
@@ -20,6 +20,6 @@ override_dh_auto_configure:
 override_dh_auto_test:
 ifeq (,$(findstring nocheck, $(DEB_BUILD_OPTIONS)))
 	set -e ; for pyvers in $(PYTHON3S); do \
-		PYTHONPATH="." python$$pyvers -m pytest -k 'not TestCLI' tests ; \
+		PYTHONPATH="./src" python$$pyvers -m pytest -k 'not TestCLI' tests ; \
 	done
 endif

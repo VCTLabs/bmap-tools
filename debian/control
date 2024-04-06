@@ -1,4 +1,4 @@
-Source: bmap-tools
+Source: bmaptool
 Maintainer: Simon McVittie <smcv@debian.org>
 Uploaders: Sjoerd Simons <sjoerd@debian.org>
 Section: utils
@@ -20,7 +20,7 @@ Vcs-Browser: https://salsa.debian.org/debian/bmap-tools
 Rules-Requires-Root: no
 Homepage: https://github.com/intel/bmap-tools
 
-Package: bmap-tools
+Package: bmaptool
 Architecture: all
 Depends:
  python3,
