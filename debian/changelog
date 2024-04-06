@@ -1,3 +1,9 @@
+bmaptool (3.7-2) unstable; urgency=medium
+
+  * New upstream maintainer is changing package name
+
+ -- Steve Arnold <nerdboy@gentoo.org>  Fri, 05 Apr 2024 20:05:15 -0700
+
 bmap-tools (3.7-1) unstable; urgency=medium
 
   * New upstream release
