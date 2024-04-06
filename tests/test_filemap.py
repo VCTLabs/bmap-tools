@@ -29,7 +29,7 @@ import sys
 import random
 import itertools
 import tests.helpers
-from six.moves import zip_longest
+from itertools import zip_longest
 from bmaptool import Filemap
 
 import pytest
