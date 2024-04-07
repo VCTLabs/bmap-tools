@@ -63,12 +63,14 @@ import sys
 import hashlib
 import logging
 import datetime
-from six import reraise
-from six.moves import queue as Queue
-from six.moves import _thread as thread
-from typing import Optional
-from xml.etree import ElementTree
-from bmaptools.BmapHelpers import human_size
+from typing import List, Optional
+
+import queue
+import _thread as thread
+from defusedxml import DefusedXmlException
+from defusedxml.ElementTree import parse
+
+from .BmapHelpers import human_size
 
 _log = logging.getLogger(__name__)  # pylint: disable=C0103
 
@@ -112,7 +114,7 @@ class SysfsChange:
         self.suppress_ioerrors = suppress_ioerrors
         self.old_value = ""
         self.modified = False
-        self.options = []
+        self.options: List[str] = []
         self.error: Optional[IOError] = None
 
     def _read(self):
@@ -394,13 +396,13 @@ class BmapCopy(object):
 
     def _parse_bmap(self):
         """
-        Parse the bmap file and initialize corresponding class instance attributs.
+        Parse the bmap file and initialize corresponding class instance attributes.
         """
 
         try:
-            self._xml = ElementTree.parse(self._f_bmap)
-        except ElementTree.ParseError as err:
-            # Extrace the erroneous line with some context
+            self._xml = parse(self._f_bmap)
+        except DefusedXmlException as err:
+            # Extract the erroneous line with some context
             self._f_bmap.seek(0)
             xml_extract = ""
             for num, line in enumerate(self._f_bmap):
@@ -684,7 +686,7 @@ class BmapCopy(object):
 
         # Create the queue for block batches and start the reader thread, which
         # will read the image in batches and put the results to '_batch_queue'.
-        self._batch_queue = Queue.Queue(self._batch_queue_len)
+        self._batch_queue = queue.Queue(self._batch_queue_len)
         thread.start_new_thread(self._get_data, (verify,))
 
         blocks_written = 0
@@ -714,7 +716,7 @@ class BmapCopy(object):
                 # The reader thread encountered an error and passed us the
                 # exception.
                 exc_info = batch[1]
-                reraise(exc_info[0], exc_info[1], exc_info[2])
+                raise exc_info[1]
 
             (start, end, buf) = batch[1:4]
 

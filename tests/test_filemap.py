@@ -29,8 +29,10 @@ import sys
 import random
 import itertools
 import tests.helpers
-from six.moves import zip_longest
-from bmaptools import Filemap
+from itertools import zip_longest
+from bmaptool import Filemap
+
+import pytest
 
 # This is a work-around for Centos 6
 try:
@@ -144,7 +146,8 @@ class TestFilemap(unittest.TestCase):
     The test class for this unit tests. Basically executes the '_do_test()'
     function for different sparse files.
     """
-
+    @pytest.mark.linux
+    @pytest.mark.slow
     def test(self):  # pylint: disable=R0201
         """
         The test entry point. Executes the '_do_test()' function for files of

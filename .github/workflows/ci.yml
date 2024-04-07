@@ -1,49 +1,61 @@
-name: ci
+name: CI
 
 on:
-  push:
-    branches: [ "master" ]
+  workflow_dispatch:
   pull_request:
-    branches: [ "master" ]
+  push:
+    branches: [ main ]
 
 jobs:
-  check:
-    runs-on: ubuntu-latest
+  build:
 
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.x'
-    - name: Install dependencies
-      run: |
-        sudo apt-get install -y libgpgme11-dev
-        curl -sSL https://install.python-poetry.org | python3 -
-        poetry install -n
-    - name: Check code
-      run: poetry run black bmaptools/* tests/* --check
-
-  test:
-    needs: check
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    env:
+      OS: ${{ matrix.os }}
+      PYTHON: ${{ matrix.python-version }}
+      PYTHONIOENCODING: utf-8
+      PIP_DOWNLOAD_CACHE: ${{ github.workspace }}/../.pip_download_cache
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
-
+        os: [ubuntu-22.04, macos-latest]
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
     steps:
-    - uses: actions/checkout@v3
+    - name: Set git crlf/eol
+      run: |
+        git config --global core.autocrlf false
+        git config --global core.eol lf
+
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Linux dependencies
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get -qq update
+        sudo apt-get install -y pbzip2 pigz lzop liblz4-tool libgpgme11-dev
+
+    - name: Macos dependencies
+      if: runner.os == 'MacOS'
+      run: |
+        brew install gpgme
+
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install dependencies
       run: |
-        # Installs compression deps
-        sudo apt-get install -y pbzip2 pigz lzop liblz4-tool libgpgme11-dev
-        # Installs poetry
-        curl -sSL https://install.python-poetry.org | python3 -
-        poetry install -n
+        python -m pip install --upgrade pip
+        pip install tox tox-gh-actions
+
     - name: Run tests
-      run: poetry run python -m unittest -bv
+      run: |
+        tox -- --slow
+      env:
+        PLATFORM: ${{ matrix.os }}

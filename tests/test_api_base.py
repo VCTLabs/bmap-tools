@@ -34,9 +34,11 @@ import sys
 import tempfile
 import filecmp
 import subprocess
-from six.moves import zip_longest
+from itertools import zip_longest
 from tests import helpers
-from bmaptools import BmapHelpers, BmapCreate, Filemap
+from bmaptool import BmapHelpers, BmapCreate, Filemap
+
+import pytest
 
 # This is a work-around for Centos 6
 try:
@@ -266,6 +268,8 @@ class TestCreateCopy(unittest.TestCase):
     function for different sparse files.
     """
 
+    @pytest.mark.linux
+    @pytest.mark.slow
     def test(self):  # pylint: disable=R0201
         """
         The test entry point. Executes the '_do_test()' function for files of

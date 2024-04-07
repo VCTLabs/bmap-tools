@@ -1,22 +1,139 @@
-[tool.poetry]
-name = "bmaptools"
-version = "3.7.0"
-license = "GPL-2.0-only"
+[build-system]  # these versions are valid on python 3.7 and up
+requires = [
+    "setuptools>=61",
+    "setuptools_scm>=7",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bmaptool"
 description = "BMAP tools"
-authors = ["Artem Bityutskiy <dedekind1@gmail.com>"]
+dynamic = ["version"]
+dependencies = [
+    "defusedxml",
+    "gpg >= 1.10.0",
+    'importlib-metadata>=4.6; python_version < "3.10"',
+]
+requires-python = ">=3.8"
+authors = [
+    {name = "Joshua Watt", email = "JPEWhacker@gmail.com"},
+    {name = "Trevor Woerner", email = "twoerner@gmail.com"},
+    {name = "Tim Orling", email = "ticotimo@gmail.com"},
 
-[tool.poetry.dependencies]
-python = "^3.8"
-six = "^1.16.0"
-gpg = "^1.10.0"
+]
+readme = "README.md"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Embedded Systems",
+    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
 
-[tool.poetry.dev-dependencies]
-black = "^22.3.0"
-nose = "^1.3.7"
+[project.optional-dependencies]
+dev = [
+    "black >= 22.3.0",
+    "pylint >= 3.1.0",
+]
+cov = [
+    "coverage",
+    "coverage_python_version",
+]
+doc = [
+    "sphinx",
+    "sphinx_git",
+    "recommonmark",
+    "sphinx_rtd_theme",
+    "sphinxcontrib-apidoc",
+]
+test = [
+    "pytest",
+    "pytest-cov",
+    "six >= 1.16.0",
+]
 
-[tool.poetry.scripts]
-bmaptool = "bmaptools.CLI:main"
+[project.urls]
+Homepage = "https://github.com/yoctoproject/bmaptool"
+Repository = "https://github.com/yoctoproject/bmaptool.git"
+Issues = "https://github.com/yoctoproject/bmaptool/issues"
+Changelog = "https://github.com/yoctoproject/bmaptool/blob/master/CHANGELOG.md"
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[project.scripts]
+bmaptool = "bmaptool.CLI:main"
+
+[tool.setuptools_scm]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["tests", "src/bmaptool",]
+log_cli =  false
+doctest_optionflags = ["ELLIPSIS", "NORMALIZE_WHITESPACE",]
+addopts = "-ra -q -p no:warnings --capture=fd"
+markers = [
+    "slow: marks tests as slow (run with --slow)",
+    "linux: runs on this platform (or not)",
+    "darwin",
+    "win32",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["src/bmaptool"]
+plugins = ["coverage_python_version"]
+
+[tool.coverage.paths]
+source = [
+    "src/",
+    ".tox/*/site-packages"
+]
+
+[tool.coverage.report]
+fail_under = 40
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "raise AssertionError",
+    "if typing.TYPE_CHECKING:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.black]
+line-length = 90
+skip-string-normalization = true
+include = '\.py$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | docs
+  | dist
+  | tests
+)/
+'''
+
+[tool.pycln]
+all = true
+
+[tool.isort]
+line_length = 72
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true
+
+[tool.bandit]
+exclude_dirs = ["contrib"]
